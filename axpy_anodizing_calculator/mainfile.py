@@ -1,13 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import argparse
 import sys
 
-#
-# DEFINE YOUR FUNCTIONS HERE...
-#
-
-    
 def main():
 
     '''Console script'''
@@ -16,32 +9,35 @@ def main():
     # An argument without - is required
     parser.add_argument('surfacearea', type=float, help='Surface area in mm^2')
     parser.add_argument('-thickness', type=float, default=1, help='The anodizing thickness in "mils"')
-    parser.add_argument('-currentdensity', type=float, default=6, help='The current density, default is 6 Amp/Ft^2')
-    
+    parser.add_argument('-currentdensity', type=float, default=0.15, help='The current density, default is 0.15 Amp/in^2')
 
-    
+    # Show help if no arguments are given
     if len(sys.argv) <=1:
         sys.argv.append('--help')
 
-    # Show help if no arguments are given
     args = parser.parse_args()
 
+############################################################
+    
+    inch_per_mm = 0.0393700787
 
-    # This formula is based on the "720 rule"
-
-    inch_per_foot = 0.00328084
-
-    squarefoot = args.surfacearea*inch_per_foot*inch_per_foot
-    setcurrent = squarefoot * args.currentdensity
-    time =  720 * args.thickness / args.currentdensity
+    squareinch = args.surfacearea*inch_per_mm**2
+    setcurrent = squareinch * args.currentdensity
+    #time =  720 * args.thickness / args.currentdensity
+    time = 2 # TEMP
     peakvoltage = 2.5 * args.currentdensity
-    
-    print(' Anodizing recipie')
-    print('-'*30)
-
-    print(' Part Surface Area: \t%.1f mm^2\n\n Set Current:\t\t%.2f Ampere\n Time:\t\t\t%.1f Minutes\n Peak voltage:\t\t%.1f Vdc' % (args.surfacearea, setcurrent, time,peakvoltage))
-    print('-'*30)
-
-    
+    print ('\033[91m')
+    print('='*40) 
+    print('          Anodizing recipie')
+    print('          Axel Johansson V1.3')
+    print('='*40)
+    print ('\033[0m')    
+    print(' Part Surface Area:\033[4m\t%.1f\033[0m mm^2 \n\n Set Current:\033[4m\t\t%.2f\033[0m Ampere\n Time:\t\t\t%.1f Hours\n Peak voltage:\t\t%.1f Vdc' % (args.surfacearea, setcurrent, time,peakvoltage))
+    print('-'*40)
+    print(' REMEMBER:\n (+) Goes to the part\n (-) Goes to the Cathode')
+    print('-'*40)
+    print('')
+    #print ('\033[0m')
+###########################################################    
 if __name__ == "__main__":
     main()
